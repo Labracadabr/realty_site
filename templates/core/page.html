@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% load i18n lovina %}
+{% block title %}{{ page.seo_title|default:page.title }} — {{ site.brand }}{% endblock %}
+{% block description %}{{ page.seo_description|default:page.lead|truncatechars:165 }}{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container narrow">
+    <h1 class="h-display">{{ page.title }}</h1>
+    {% if page.lead %}<p class="lead">{{ page.lead }}</p>{% endif %}
+  </div>
+</section>
+{% if page.image %}<div class="container narrow page-image"><img src="{{ page.image.url }}" alt=""></div>{% endif %}
+<section class="section section--tight">
+  <div class="container narrow prose prose--large">{{ page.body|richtext }}</div>
+</section>
+{% if with_form %}{% include "partials/cta_section.html" %}{% endif %}
+{% endblock %}

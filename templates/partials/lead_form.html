@@ -1,0 +1,39 @@
+{% load i18n lovina %}
+<form class="form" method="post" action="{% url 'listings:lead' %}">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+  {% if property %}<input type="hidden" name="property_id" value="{{ property.pk }}">{% endif %}
+  <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+  <div class="field">
+    <label for="lf-name-{{ form_id|default:'x' }}">{% translate "Your name" %}</label>
+    <input id="lf-name-{{ form_id|default:'x' }}" name="name" required maxlength="120" autocomplete="name" value="{% lead_initial 'name' %}">
+  </div>
+  <div class="form__row">
+    <div class="field">
+      <label for="lf-phone-{{ form_id|default:'x' }}">{% translate "Phone / WhatsApp" %}</label>
+      <input id="lf-phone-{{ form_id|default:'x' }}" name="phone" type="tel" maxlength="40" autocomplete="tel" value="{% lead_initial 'phone' %}">
+    </div>
+    <div class="field">
+      <label for="lf-email-{{ form_id|default:'x' }}">{% translate "Email" %}</label>
+      <input id="lf-email-{{ form_id|default:'x' }}" name="email" type="email" autocomplete="email" value="{% lead_initial 'email' %}">
+    </div>
+  </div>
+  <div class="field">
+    <label for="lf-tg-{{ form_id|default:'x' }}">{% translate "Telegram" %} <span class="field__opt">({% translate "optional" %})</span></label>
+    <input id="lf-tg-{{ form_id|default:'x' }}" name="telegram" maxlength="60" placeholder="@username" value="{% lead_initial 'telegram' %}">
+  </div>
+  {% if not property %}
+  <div class="field">
+    <label for="lf-int-{{ form_id|default:'x' }}">{% translate "Interest" %}</label>
+    <select id="lf-int-{{ form_id|default:'x' }}" name="interest">
+      {% for value, label in form.fields.interest.choices %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+    </select>
+  </div>
+  {% endif %}
+  <div class="field">
+    <label for="lf-msg-{{ form_id|default:'x' }}">{% translate "Message" %}</label>
+    <textarea id="lf-msg-{{ form_id|default:'x' }}" name="message" rows="4" maxlength="3000" placeholder="{% if property %}{% translate 'I would like to know more about this property…' %}{% else %}{% translate 'Tell us what you are looking for: area, budget, purpose…' %}{% endif %}">{% lead_initial 'message' %}</textarea>
+  </div>
+  <button class="btn btn--primary btn--block" type="submit">{% translate "Send inquiry" %} {% icon "arrow" 18 %}</button>
+  <p class="form__note">{% translate "We reply within 24 hours. Your data is used only to answer your request." %}</p>
+</form>

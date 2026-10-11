@@ -1,0 +1,521 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: lovinaland\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "About"
+msgstr "Hakkımda"
+
+msgid "About the property"
+msgstr "Mülk hakkında"
+
+msgid "Agricultural (green zone)"
+msgstr "Tarım (yeşil bölge)"
+
+msgid "All properties"
+msgstr "Tüm mülkler"
+
+msgid "All regions"
+msgstr "Tüm bölgeler"
+
+msgid "All services"
+msgstr "Tüm hizmetler"
+
+msgid "All types"
+msgstr "Tüm türler"
+
+msgid "An island"
+msgstr "Bir ada"
+
+msgid "Any"
+msgstr "Fark etmez"
+
+msgid "Bali · Lombok · Nusa Tenggara"
+msgstr "Bali · Lombok · Nusa Tenggara"
+
+msgid "Beachfront"
+msgstr "Sahilde"
+
+msgid "Beachfront land"
+msgstr "Sahil arazisi"
+
+msgid "Build with us"
+msgstr "Bizimle inşa edin"
+
+msgid "Buying land"
+msgstr "Arazi satın alma"
+
+msgid ""
+"Buying land in Indonesia as a foreigner is safe when every step is done "
+"right. We handle the paperwork, the people and the construction site."
+msgstr ""
+"Her adım doğru atıldığında bir yabancı olarak Endonezya'da arazi satın almak"
+" güvenlidir. Evrakları, insanları ve şantiyeyi biz yönetiriz."
+
+msgid "Catalogue"
+msgstr "Katalog"
+
+msgid ""
+"Certificate and zoning checks, the right ownership structure for foreigners,"
+" notary and PPAT — handled end to end."
+msgstr ""
+"Tapu ve imar kontrolleri, yabancılar için doğru mülkiyet yapısı, noter ve "
+"PPAT — baştan sona yönetilir."
+
+msgid "Clients"
+msgstr "Müşteriler"
+
+msgid "Close"
+msgstr "Kapat"
+
+msgid "Closed / lost"
+msgstr "Kapandı / kaybedildi"
+
+msgid "Commercial"
+msgstr "Ticari"
+
+msgid "Company"
+msgstr "Şirket"
+
+msgid "Construction"
+msgstr "İnşaat"
+
+msgid "Contact"
+msgstr "İletişim"
+
+msgid "Contact us"
+msgstr "Bize ulaşın"
+
+msgid "Deal"
+msgstr "Anlaşma"
+
+msgid "Direct access"
+msgstr "Doğrudan erişim"
+
+msgid "Draft"
+msgstr "Taslak"
+
+msgid ""
+"Due diligence, PT PMA setup, notary and PPAT, permits and construction in "
+"Bali — full support for foreign land buyers."
+msgstr ""
+"Bali'de durum tespiti, PT PMA kurulumu, noter ve PPAT, izinler ve inşaat — "
+"yabancı arazi alıcılarına tam destek."
+
+msgid "Electricity"
+msgstr "Elektrik"
+
+msgid "Email"
+msgstr "E-posta"
+
+msgid "English"
+msgstr "İngilizce"
+
+msgid "English, Russian and Turkish"
+msgstr "İngilizce, Rusça ve Türkçe"
+
+msgid ""
+"Every property is personally inspected, with documents verified before it is"
+" listed."
+msgstr ""
+"Her mülk kişisel olarak incelenir ve belgeleri yayından önce doğrulanır."
+
+msgid "Exclusive land in Bali"
+msgstr "Bali'de özel araziler"
+
+msgid ""
+"Exclusive land plots, beachfront land and islands in Bali and Indonesia, "
+"directly from owners."
+msgstr ""
+"Bali ve Endonezya'da doğrudan sahiplerinden özel arsalar, sahil arazileri ve"
+" adalar."
+
+msgid "Explore"
+msgstr "Keşfet"
+
+msgid "Free initial consultation"
+msgstr "Ücretsiz ilk danışmanlık"
+
+msgid "Freehold (SHM)"
+msgstr "Tam mülkiyet (SHM)"
+
+msgid "From the first visit to the keys"
+msgstr "İlk ziyaretten anahtar teslimine"
+
+msgid "Full deal support"
+msgstr "Tam işlem desteği"
+
+msgid "HGB (right to build)"
+msgstr "HGB (inşa hakkı)"
+
+msgid "Hak Pakai (right to use)"
+msgstr "Hak Pakai (kullanım hakkı)"
+
+msgid "Highlights"
+msgstr "Öne çıkanlar"
+
+msgid "How buying works"
+msgstr "Satın alma nasıl işler"
+
+msgid "How to buy"
+msgstr "Nasıl satın alınır"
+
+msgid "I would like to know more about this property…"
+msgstr "Bu mülk hakkında daha fazla bilgi almak istiyorum…"
+
+msgid "I'm interested in…"
+msgstr "İlgilendiğim konu…"
+
+msgid "In progress"
+msgstr "Devam ediyor"
+
+msgid "Interest"
+msgstr "İlgi alanı"
+
+msgid "Island"
+msgstr "Ada"
+
+msgid "Land & islands"
+msgstr "Araziler ve adalar"
+
+msgid "Land area"
+msgstr "Arazi alanı"
+
+msgid "Land plot"
+msgstr "Arsa"
+
+msgid "Land with buildings"
+msgstr "Yapılı arazi"
+
+msgid "Language"
+msgstr "Dil"
+
+msgid "Largest first"
+msgstr "Önce en büyük"
+
+msgid "Leasehold"
+msgstr "Uzun süreli kira"
+
+msgid "Legal & documents"
+msgstr "Hukuk ve belgeler"
+
+msgid "Legal & ownership"
+msgstr "Hukuk ve mülkiyet"
+
+msgid "Legally clean deals"
+msgstr "Hukuken temiz işlemler"
+
+msgid "Let's talk about your project"
+msgstr "Projenizi konuşalım"
+
+msgid "Link expired"
+msgstr "Bağlantının süresi doldu"
+
+msgid "Link only"
+msgstr "Yalnızca bağlantıyla"
+
+msgid "Location"
+msgstr "Konum"
+
+msgid "Main"
+msgstr "Ana menü"
+
+msgid "Max price, USD"
+msgstr "Maks. fiyat, USD"
+
+msgid "Menu"
+msgstr "Menü"
+
+msgid "Message"
+msgstr "Mesaj"
+
+msgid "Min area, are"
+msgstr "Min. alan, ar"
+
+msgid "Mixed"
+msgstr "Karma"
+
+msgid "New"
+msgstr "Yeni"
+
+msgid "New properties are being prepared. Contact us for a private selection."
+msgstr ""
+"Yeni mülkler hazırlanıyor. Size özel seçki için bizimle iletişime geçin."
+
+msgid "Next"
+msgstr "Sonraki"
+
+msgid ""
+"Not everything we have is published. Share your goals and budget — we will "
+"send matching off-market options and answer every legal question."
+msgstr ""
+"Elimizdeki her şey yayında değil. Hedeflerinizi ve bütçenizi paylaşın — "
+"uygun piyasa dışı seçenekleri gönderir, tüm hukuki sorularınızı yanıtlarız."
+
+msgid ""
+"Nothing matches these filters yet. Many of our properties are offered "
+"privately — tell us what you need."
+msgstr ""
+"Bu filtrelere uyan bir şey henüz yok. Mülklerimizin çoğu özel olarak "
+"sunuluyor — neye ihtiyacınız olduğunu söyleyin."
+
+msgid "Ocean view"
+msgstr "Okyanus manzarası"
+
+msgid ""
+"Off-market land and islands in Indonesia. Direct from owners, with full "
+"legal support."
+msgstr ""
+"Endonezya'da piyasa dışı araziler ve adalar. Doğrudan sahiplerinden, tam "
+"hukuki destekle."
+
+msgid "Off-market, directly from the owners"
+msgstr "Piyasa dışı, doğrudan sahiplerinden"
+
+msgid "Office"
+msgstr "Ofis"
+
+msgid "On request"
+msgstr "Talep üzerine"
+
+msgid "One partner from the first site visit to the finished villa"
+msgstr "İlk arazi ziyaretinden bitmiş villaya kadar tek ortak"
+
+msgid "Open in Google Maps"
+msgstr "Google Haritalar'da aç"
+
+msgid "Open photo"
+msgstr "Fotoğrafı aç"
+
+msgid "Other / on request"
+msgstr "Diğer / talep üzerine"
+
+msgid "Other properties"
+msgstr "Diğer mülkler"
+
+msgid "Ownership"
+msgstr "Mülkiyet"
+
+msgid ""
+"Permits, architects and construction supervision — turn the land into a "
+"villa or a hospitality project."
+msgstr ""
+"İzinler, mimarlar ve inşaat denetimi — araziyi bir villaya veya konaklama "
+"projesine dönüştürün."
+
+msgid "Phone / WhatsApp"
+msgstr "Telefon / WhatsApp"
+
+msgid "Please leave at least one way to contact you."
+msgstr "Lütfen size ulaşabileceğimiz en az bir yol bırakın."
+
+msgid "Preview"
+msgstr "Önizleme"
+
+msgid "Previous"
+msgstr "Önceki"
+
+msgid "Price"
+msgstr "Fiyat"
+
+msgid "Price on request"
+msgstr "Fiyat talep üzerine"
+
+msgid "Price per are"
+msgstr "Ar başına fiyat"
+
+msgid "Price: high to low"
+msgstr "Fiyat: yüksekten düşüğe"
+
+msgid "Price: low to high"
+msgstr "Fiyat: düşükten yükseğe"
+
+msgid "Privacy"
+msgstr "Gizlilik"
+
+msgid "Private selection"
+msgstr "Size özel seçki"
+
+msgid "Properties"
+msgstr "Mülkler"
+
+msgid "Published"
+msgstr "Yayında"
+
+msgid "Read more"
+msgstr "Devamını oku"
+
+msgid "Recommended"
+msgstr "Önerilen"
+
+msgid "Region"
+msgstr "Bölge"
+
+msgid "Registered Indonesian company"
+msgstr "Kayıtlı Endonezya şirketi"
+
+msgid "Request a private selection"
+msgstr "Özel seçki iste"
+
+msgid "Reset"
+msgstr "Sıfırla"
+
+msgid "Residential (yellow zone)"
+msgstr "Konut (sarı bölge)"
+
+msgid "Road access"
+msgstr "Yol erişimi"
+
+msgid "Selected properties"
+msgstr "Seçkin mülkler"
+
+msgid "Send inquiry"
+msgstr "Talep gönder"
+
+msgid "Services"
+msgstr "Hizmetler"
+
+msgid "Show"
+msgstr "Göster"
+
+msgid "Site visits and drone footage on request"
+msgstr "Talep üzerine arazi ziyareti ve drone çekimi"
+
+msgid "Skip to content"
+msgstr "İçeriğe geç"
+
+msgid "Sold"
+msgstr "Satıldı"
+
+msgid "Something else"
+msgstr "Başka bir şey"
+
+msgid "Sort"
+msgstr "Sırala"
+
+msgid "Spam"
+msgstr "Spam"
+
+msgid "Status"
+msgstr "Durum"
+
+msgid "Telegram"
+msgstr "Telegram"
+
+msgid "Tell us what you are looking for"
+msgstr "Ne aradığınızı anlatın"
+
+msgid "Tell us what you are looking for: area, budget, purpose…"
+msgstr "Ne aradığınızı anlatın: bölge, bütçe, amaç…"
+
+msgid "Terms"
+msgstr "Koşullar"
+
+msgid "Thank you! We will contact you within 24 hours."
+msgstr "Teşekkürler! 24 saat içinde sizinle iletişime geçeceğiz."
+
+msgid ""
+"The fastest way is WhatsApp or Telegram. We reply in English, Russian and "
+"Turkish."
+msgstr ""
+"En hızlı yol WhatsApp veya Telegram. İngilizce, Rusça ve Türkçe yanıt "
+"veriyoruz."
+
+msgid ""
+"The property may have been sold or the private link has expired. Contact us "
+"and we will send you current options."
+msgstr ""
+"Mülk satılmış veya özel bağlantının süresi dolmuş olabilir. Bize yazın, "
+"güncel seçenekleri gönderelim."
+
+msgid "This link is no longer active"
+msgstr "Bu bağlantı artık aktif değil"
+
+msgid "To be confirmed"
+msgstr "Teyit edilecek"
+
+msgid "To the airport"
+msgstr "Havalimanına"
+
+msgid "To the beach"
+msgstr "Plaja"
+
+msgid "Too many requests. Please contact us via WhatsApp or Telegram."
+msgstr "Çok fazla istek. Lütfen bize WhatsApp veya Telegram üzerinden ulaşın."
+
+msgid "Tourism (pink zone)"
+msgstr "Turizm (pembe bölge)"
+
+msgid "Type"
+msgstr "Tür"
+
+msgid "Video"
+msgstr "Video"
+
+msgid "View properties"
+msgstr "Mülkleri görüntüle"
+
+msgid "Water"
+msgstr "Su"
+
+msgid ""
+"We reply within 24 hours. Your data is used only to answer your request."
+msgstr ""
+"24 saat içinde yanıt veriyoruz. Verileriniz yalnızca talebinizi yanıtlamak "
+"için kullanılır."
+
+msgid ""
+"We verify the certificate, zoning and seller documents before the deal, and "
+"structure ownership for foreign buyers: leasehold, PT PMA (HGB) or Hak "
+"Pakai. Notary and PPAT services are included in our support."
+msgstr ""
+"İşlemden önce tapuyu, imarı ve satıcı belgelerini doğrular, yabancı alıcılar"
+" için mülkiyeti yapılandırırız: uzun süreli kira, PT PMA (HGB) veya Hak "
+"Pakai. Noter ve PPAT hizmetleri desteğimize dahildir."
+
+msgid "What our clients say"
+msgstr "Müşterilerimiz ne diyor"
+
+msgid "Why work with us"
+msgstr "Neden biz"
+
+msgid ""
+"Years of personal relationships with Indonesian landowners give access to "
+"plots and islands that never appear on public portals."
+msgstr ""
+"Endonezyalı arazi sahipleriyle yıllara dayanan kişisel ilişkiler, açık "
+"portallarda asla yer almayan arsalara ve adalara erişim sağlar."
+
+msgid "Your name"
+msgstr "Adınız"
+
+msgid "Zoning"
+msgstr "İmar durumu"
+
+msgid "are"
+msgstr "ar"
+
+msgid "not visible to the public"
+msgstr "ziyaretçilere görünmez"
+
+msgid "optional"
+msgstr "isteğe bağlı"
+
+msgid "or leave a request"
+msgstr "veya talep bırakın"
+
+msgid "photos"
+msgstr "fotoğraf"
+
+msgid "years"
+msgstr "yıl"
+
+msgid "%(n)s property"
+msgid_plural "%(n)s properties"
+msgstr[0] "%(n)s mülk"
+msgstr[1] "%(n)s mülk"

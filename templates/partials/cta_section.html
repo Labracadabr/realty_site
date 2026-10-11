@@ -1,0 +1,18 @@
+{% load i18n lovina %}
+<section class="section section--tint" id="inquiry">
+  <div class="container cta">
+    <div class="cta__text">
+      <p class="eyebrow">{% translate "Private selection" %}</p>
+      <h2 class="h-display">{% translate "Tell us what you are looking for" %}</h2>
+      <p class="lead">{% translate "Not everything we have is published. Share your goals and budget — we will send matching off-market options and answer every legal question." %}</p>
+      <ul class="checklist">
+        <li>{% icon "check" 18 %} {% translate "Free initial consultation" %}</li>
+        <li>{% icon "check" 18 %} {% translate "Site visits and drone footage on request" %}</li>
+        <li>{% icon "check" 18 %} {% translate "English, Russian and Turkish" %}</li>
+      </ul>
+    </div>
+    <div class="cta__form panel">
+      {% include "partials/lead_form.html" with form_id="cta" %}
+    </div>
+  </div>
+</section>

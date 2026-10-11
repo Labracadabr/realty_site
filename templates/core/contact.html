@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% load i18n lovina %}
+{% block title %}{% translate "Contact" %} — {{ site.brand }}{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">{% translate "Contact" %}</p>
+    <h1 class="h-display">{% translate "Let's talk about your project" %}</h1>
+  </div>
+</section>
+<section class="section section--tight" id="inquiry">
+  <div class="container cta">
+    <div class="cta__text">
+      <p class="lead">{% translate "The fastest way is WhatsApp or Telegram. We reply in English, Russian and Turkish." %}</p>
+      <ul class="contact-list">
+        {% if site.whatsapp_url %}<li><a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">{% icon "whatsapp" 22 %}<span><small>WhatsApp</small>{{ site.phone|default:site.whatsapp }}</span></a></li>{% endif %}
+        {% if site.telegram_url %}<li><a href="{{ site.telegram_url }}" target="_blank" rel="noopener">{% icon "telegram" 22 %}<span><small>Telegram</small>@{{ site.telegram }}</span></a></li>{% endif %}
+        {% if site.email %}<li><a href="mailto:{{ site.email }}">{% icon "mail" 22 %}<span><small>Email</small>{{ site.email }}</span></a></li>{% endif %}
+        {% if site.address %}<li><span class="contact-list__static">{% icon "pin" 22 %}<span><small>{% translate "Office" %}</small>{{ site.address }}</span></span></li>{% endif %}
+      </ul>
+    </div>
+    <div class="cta__form panel">{% include "partials/lead_form.html" with form_id="contact" %}</div>
+  </div>
+</section>
+{% endblock %}

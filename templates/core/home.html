@@ -1,0 +1,130 @@
+{% extends "base.html" %}{% load i18n static lovina %}
+{% block header_class %} site-header--overlay{% endblock %}
+{% block body_class %}page-home{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero__media">
+    {% if site.hero_video %}
+      <video autoplay muted loop playsinline {% if site.hero_image %}poster="{{ site.hero_image.url }}"{% endif %}><source src="{{ site.hero_video.url }}" type="video/mp4"></video>
+    {% elif site.hero_image %}
+      <img src="{{ site.hero_image.url }}" alt="" fetchpriority="high">
+    {% else %}
+      <img src="{% static 'img/hero.svg' %}" alt="" fetchpriority="high">
+    {% endif %}
+  </div>
+  <div class="container hero__content">
+    <p class="eyebrow eyebrow--light">{% translate "Bali · Lombok · Nusa Tenggara" %}</p>
+    <h1 class="hero__title">{{ site.hero_title }}</h1>
+    {% if site.hero_subtitle %}<p class="hero__subtitle">{{ site.hero_subtitle }}</p>{% endif %}
+    <div class="hero__actions">
+      <a class="btn btn--light" href="{% url 'listings:catalog' %}">{% translate "View properties" %} {% icon "arrow" 18 %}</a>
+      <a class="btn btn--ghost-light" href="#inquiry">{% translate "Request a private selection" %}</a>
+    </div>
+  </div>
+  {% if site.stat_list %}
+  <div class="container hero__stats">
+    {% for s in site.stat_list %}<div class="stat"><span class="stat__value">{{ s.value }}</span><span class="stat__label">{{ s.label }}</span></div>{% endfor %}
+  </div>
+  {% endif %}
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">{% translate "Selected properties" %}</p>
+        <h2 class="h-display">{% translate "Off-market, directly from the owners" %}</h2>
+      </div>
+      <a class="link-arrow" href="{% url 'listings:catalog' %}">{% translate "All properties" %} {% icon "arrow" 18 %}</a>
+    </div>
+    {% if featured %}
+    <div class="grid-cards">
+      {% for p in featured %}{% include "partials/property_card.html" %}{% endfor %}
+    </div>
+    {% else %}
+    <p class="empty">{% translate "New properties are being prepared. Contact us for a private selection." %}</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section section--tint">
+  <div class="container">
+    <p class="eyebrow">{% translate "Why work with us" %}</p>
+    <h2 class="h-display narrow">{% translate "One partner from the first site visit to the finished villa" %}</h2>
+    <div class="pillars">
+      <div class="pillar">
+        <span class="pillar__icon">{% icon "key" 28 %}</span>
+        <h3>{% translate "Direct access" %}</h3>
+        <p>{% translate "Years of personal relationships with Indonesian landowners give access to plots and islands that never appear on public portals." %}</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar__icon">{% icon "shield" 28 %}</span>
+        <h3>{% translate "Legally clean deals" %}</h3>
+        <p>{% translate "Certificate and zoning checks, the right ownership structure for foreigners, notary and PPAT — handled end to end." %}</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar__icon">{% icon "crane" 28 %}</span>
+        <h3>{% translate "Build with us" %}</h3>
+        <p>{% translate "Permits, architects and construction supervision — turn the land into a villa or a hospitality project." %}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if services %}
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">{% translate "Services" %}</p>
+        <h2 class="h-display">{% translate "Full deal support" %}</h2>
+      </div>
+      <a class="link-arrow" href="{% url 'core:services' %}">{% translate "All services" %} {% icon "arrow" 18 %}</a>
+    </div>
+    <div class="services-grid">
+      {% for s in services %}
+      <div class="service">
+        <span class="service__icon">{% icon s.icon 26 %}</span>
+        <h3>{{ s.title }}</h3>
+        <p>{{ s.summary }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if about %}
+<section class="section section--dark">
+  <div class="container about-teaser">
+    {% if about.image %}<div class="about-teaser__img"><img src="{{ about.image.url }}" alt="{{ about.title }}" loading="lazy"></div>{% endif %}
+    <div class="about-teaser__text">
+      <p class="eyebrow eyebrow--light">{% translate "About" %}</p>
+      <h2 class="h-display">{{ about.title }}</h2>
+      {% if about.lead %}<p class="lead">{{ about.lead }}</p>{% endif %}
+      <a class="btn btn--light" href="{% url 'core:about' %}">{% translate "Read more" %} {% icon "arrow" 18 %}</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if testimonials %}
+<section class="section">
+  <div class="container">
+    <p class="eyebrow">{% translate "Clients" %}</p>
+    <h2 class="h-display">{% translate "What our clients say" %}</h2>
+    <div class="quotes">
+      {% for t in testimonials %}
+      <figure class="quote">
+        <blockquote>{{ t.text }}</blockquote>
+        <figcaption><strong>{{ t.author }}</strong>{% if t.origin %} · {{ t.origin }}{% endif %}</figcaption>
+      </figure>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% include "partials/cta_section.html" %}
+{% endblock %}

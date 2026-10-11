@@ -1,0 +1,58 @@
+{% extends "base.html" %}{% load i18n lovina %}
+{% block title %}{{ page.seo_title|default:page.title }} — {{ site.brand }}{% endblock %}
+{% block description %}{{ page.seo_description|default:page.lead|truncatechars:165 }}{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container about">
+    <div class="about__text">
+      <p class="eyebrow">{% translate "About" %}</p>
+      <h1 class="h-display">{{ page.title }}</h1>
+      {% if page.lead %}<p class="lead">{{ page.lead }}</p>{% endif %}
+    </div>
+    {% if page.image %}<div class="about__img"><img src="{{ page.image.url }}" alt="{{ page.title }}"></div>{% endif %}
+  </div>
+</section>
+
+{% if site.stat_list %}
+<section class="section section--tight">
+  <div class="container stats-row">
+    {% for s in site.stat_list %}<div class="stat stat--dark"><span class="stat__value">{{ s.value }}</span><span class="stat__label">{{ s.label }}</span></div>{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="section section--tight">
+  <div class="container narrow prose prose--large">{{ page.body|richtext }}</div>
+</section>
+
+{% if site.legal_name or site.nib %}
+<section class="section section--tight">
+  <div class="container narrow">
+    <div class="panel company-card">
+      <span class="service__icon">{% icon "building" 28 %}</span>
+      <div>
+        <h2 class="h-section">{% translate "Registered Indonesian company" %}</h2>
+        <p>{{ site.legal_name }}{% if site.nib %} · NIB {{ site.nib }}{% endif %}{% if site.kbli %} · KBLI {{ site.kbli }}{% endif %}</p>
+        {% if site.address %}<p class="muted">{{ site.address }}</p>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if testimonials %}
+<section class="section">
+  <div class="container">
+    <h2 class="h-display">{% translate "What our clients say" %}</h2>
+    <div class="quotes">
+      {% for t in testimonials %}
+      <figure class="quote"><blockquote>{{ t.text }}</blockquote><figcaption><strong>{{ t.author }}</strong>{% if t.origin %} · {{ t.origin }}{% endif %}</figcaption></figure>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% include "partials/cta_section.html" %}
+{% endblock %}

@@ -1,0 +1,112 @@
+{% load static i18n lovina %}{% get_current_language as LANG %}<!doctype html>
+<html lang="{{ LANG }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ site.brand }} — {% translate "Exclusive land in Bali" %}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ site.seo_description|default:site.hero_subtitle }}{% endblock %}">
+  {% if noindex %}<meta name="robots" content="noindex, nofollow">{% else %}
+  <link rel="canonical" href="{{ SITE_URL }}{{ request.path }}">
+  {% for l in language_links %}<link rel="alternate" hreflang="{{ l.code }}" href="{{ SITE_URL }}{{ l.url }}">
+  {% endfor %}{% endif %}
+  <meta property="og:site_name" content="{{ site.brand }}">
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}{{ site.brand }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{{ site.seo_description|default:site.hero_subtitle }}{% endblock %}">
+  {% block og_image %}{% if site.hero_image %}<meta property="og:image" content="{{ site.hero_image.url|absolute }}">{% endif %}{% endblock %}
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+<a class="skip" href="#main">{% translate "Skip to content" %}</a>
+
+<header class="site-header{% block header_class %}{% endblock %}" data-header>
+  <div class="container site-header__inner">
+    <a class="logo" href="{% url 'core:home' %}" aria-label="{{ site.brand }}">
+      <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5 21c4-2.5 7-2.5 11-.5s7 2 11-.5M9 17c2.5-6 5-9 7-9s4.5 3 7 9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span class="logo__text">{{ site.brand }}</span>
+    </a>
+    <nav class="nav" data-nav aria-label="{% translate 'Main' %}">
+      {% url 'listings:catalog' as u_catalog %}{% url 'core:services' as u_services %}{% url 'core:how_to_buy' as u_how %}{% url 'core:about' as u_about %}{% url 'core:contact' as u_contact %}
+      <a href="{{ u_catalog }}"{% if u_catalog in request.path %} aria-current="page"{% endif %}>{% translate "Properties" %}</a>
+      <a href="{{ u_services }}"{% if request.path == u_services %} aria-current="page"{% endif %}>{% translate "Services" %}</a>
+      <a href="{{ u_how }}"{% if request.path == u_how %} aria-current="page"{% endif %}>{% translate "How to buy" %}</a>
+      <a href="{{ u_about }}"{% if request.path == u_about %} aria-current="page"{% endif %}>{% translate "About" %}</a>
+      <a href="{{ u_contact }}"{% if request.path == u_contact %} aria-current="page"{% endif %}>{% translate "Contact" %}</a>
+      <div class="lang" role="group" aria-label="{% translate 'Language' %}">
+        {% for l in language_links %}<a href="{{ l.url }}" hreflang="{{ l.code }}" lang="{{ l.code }}" {% if l.code == LANG %}aria-current="true"{% endif %}>{{ l.code|upper }}</a>{% endfor %}
+      </div>
+    </nav>
+    {% if site.whatsapp_url %}<a class="btn btn--small btn--outline header-cta" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">{% icon "whatsapp" 16 %} WhatsApp</a>{% endif %}
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="{% translate 'Menu' %}">{% icon "menu" 24 %}</button>
+  </div>
+</header>
+
+{% if messages %}
+<div class="toasts" role="status">
+  {% for m in messages %}<div class="toast toast--{{ m.tags }}">{{ m }}</div>{% endfor %}
+</div>
+{% endif %}
+
+<main id="main">{% block content %}{% endblock %}</main>
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div>
+      <a class="logo logo--light" href="{% url 'core:home' %}">
+        <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5 21c4-2.5 7-2.5 11-.5s7 2 11-.5M9 17c2.5-6 5-9 7-9s4.5 3 7 9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span class="logo__text">{{ site.brand }}</span>
+      </a>
+      <p class="site-footer__tag">{% translate "Off-market land and islands in Indonesia. Direct from owners, with full legal support." %}</p>
+    </div>
+    <div>
+      <h3>{% translate "Explore" %}</h3>
+      <ul>
+        <li><a href="{% url 'listings:catalog' %}">{% translate "Properties" %}</a></li>
+        <li><a href="{% url 'core:services' %}">{% translate "Services" %}</a></li>
+        <li><a href="{% url 'core:how_to_buy' %}">{% translate "How to buy" %}</a></li>
+        <li><a href="{% url 'core:about' %}">{% translate "About" %}</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>{% translate "Contact" %}</h3>
+      <ul>
+        {% if site.whatsapp_url %}<li><a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">{% icon "whatsapp" 16 %} WhatsApp</a></li>{% endif %}
+        {% if site.telegram_url %}<li><a href="{{ site.telegram_url }}" target="_blank" rel="noopener">{% icon "telegram" 16 %} Telegram</a></li>{% endif %}
+        {% if site.email %}<li><a href="mailto:{{ site.email }}">{% icon "mail" 16 %} {{ site.email }}</a></li>{% endif %}
+        {% if site.phone %}<li><a href="tel:{{ site.phone }}">{% icon "phone" 16 %} {{ site.phone }}</a></li>{% endif %}
+      </ul>
+    </div>
+    <div>
+      <h3>{% translate "Company" %}</h3>
+      <ul class="site-footer__legal">
+        {% if site.legal_name %}<li>{{ site.legal_name }}</li>{% endif %}
+        {% if site.nib %}<li>NIB {{ site.nib }}{% if site.kbli %} · KBLI {{ site.kbli }}{% endif %}</li>{% endif %}
+        {% if site.address %}<li>{{ site.address }}</li>{% endif %}
+      </ul>
+    </div>
+  </div>
+  <div class="container site-footer__bottom">
+    <span>© {% now "Y" %} {{ site.brand }}</span>
+    <span>
+      <a href="{% url 'core:page' 'privacy' %}">{% translate "Privacy" %}</a> ·
+      <a href="{% url 'core:page' 'terms' %}">{% translate "Terms" %}</a>
+    </span>
+  </div>
+</footer>
+
+{% if site.whatsapp_url or site.telegram_url %}
+<div class="float-contact">
+  {% if site.telegram_url %}<a class="float-contact__btn float-contact__btn--tg" href="{{ site.telegram_url }}" target="_blank" rel="noopener" aria-label="Telegram">{% icon "telegram" 22 %}</a>{% endif %}
+  {% if site.whatsapp_url %}<a class="float-contact__btn" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener" aria-label="WhatsApp">{% icon "whatsapp" 24 %}</a>{% endif %}
+</div>
+{% endif %}
+
+<script src="{% static 'js/site.js' %}" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

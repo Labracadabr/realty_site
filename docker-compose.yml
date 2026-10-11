@@ -1,0 +1,33 @@
+# Production on the VPS:   docker compose up -d --build
+# Only Postgres locally:   docker compose up -d db   (then DATABASE_URL=postgres://lovinaland:lovinaland@localhost:5432/lovinaland)
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: lovinaland
+      POSTGRES_USER: lovinaland
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lovinaland}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  web:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://lovinaland:${POSTGRES_PASSWORD:-lovinaland}@db:5432/lovinaland
+      MEDIA_ROOT: /app/media
+    volumes:
+      - media:/app/media
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      - db
+    profiles: ["prod"]
+
+volumes:
+  pgdata:
+  media:

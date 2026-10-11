@@ -1,0 +1,15 @@
+.ll-translate {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
+  margin: 0 0 20px; padding: 12px 16px;
+  border: 1px solid var(--hairline-color, #ddd); border-left: 4px solid #2f6b5a;
+  border-radius: 6px; background: var(--darkened-bg, #f8f8f8);
+}
+.ll-translate label { display: inline-flex; align-items: center; gap: 4px; font-weight: normal; }
+.ll-translate .ll-arrow { opacity: .6; }
+.ll-translate .ll-hint { flex-basis: 100%; font-size: 12px; color: var(--body-quiet-color, #666); }
+.ll-status { font-size: 13px; }
+.ll-status.ll-ok { color: #2f6b5a; }
+.ll-status.ll-error { color: #ba2121; }
+textarea.ll-filled, input.ll-filled { outline: 2px solid #e7b94c; outline-offset: 1px; }
+.ll-copy { cursor: pointer; color: var(--link-fg, #417690); white-space: nowrap; }
+.ll-copy:hover { text-decoration: underline; }

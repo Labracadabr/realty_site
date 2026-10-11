@@ -1,0 +1,180 @@
+{% extends "base.html" %}{% load i18n lovina %}
+{% block title %}{{ property.seo_title|default:property.title }} — {{ site.brand }}{% endblock %}
+{% block description %}{{ property.seo_description|default:property.summary|default:property.description|truncatechars:165 }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ property.title }}{% endblock %}
+{% block og_description %}{{ property.summary|default:property.description|truncatechars:200 }}{% endblock %}
+{% block og_image %}{% if images %}<meta property="og:image" content="{{ images.0.image.url|absolute }}">{% endif %}{% endblock %}
+
+{% block head %}
+{% if property.has_coords %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">{% endif %}
+{% if not noindex %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateListing",
+  "name": "{{ property.title|escapejs }}",
+  "description": "{{ property.summary|default:property.description|truncatechars:300|escapejs }}",
+  "url": "{{ SITE_URL }}{{ request.path }}",
+  {% if images %}"image": [{% for i in images|slice:":6" %}"{{ i.image.url|absolute }}"{% if not forloop.last %},{% endif %}{% endfor %}],{% endif %}
+  "datePosted": "{{ property.published_at|date:'c' }}",
+  {% if property.show_price %}"offers": {"@type": "Offer", "price": "{{ property.price_usd }}", "priceCurrency": "USD"{% if property.is_sold %}, "availability": "https://schema.org/SoldOut"{% endif %}},{% endif %}
+  "about": {
+    "@type": "Place",
+    "name": "{{ property.location|escapejs }}, {{ property.region|escapejs }}",
+    {% if property.has_coords %}"geo": {"@type": "GeoCoordinates", "latitude": {{ property.latitude }}, "longitude": {{ property.longitude }}},{% endif %}
+    "address": {"@type": "PostalAddress", "addressLocality": "{{ property.location|escapejs }}", "addressRegion": "{{ property.region|escapejs }}", "addressCountry": "ID"}
+  }
+}
+</script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if is_preview %}<div class="preview-bar">{% translate "Preview" %} · {{ property.get_status_display }} — {% translate "not visible to the public" %}</div>{% endif %}
+
+<section class="detail-hero container">
+  <nav class="crumbs" aria-label="breadcrumb">
+    <a href="{% url 'listings:catalog' %}">{% translate "Properties" %}</a> <span>/</span> <span>{{ property.ref }}</span>
+  </nav>
+
+  {% if images %}
+  <div class="gallery{% if images|length == 1 %} gallery--single{% endif %}" data-gallery>
+    {% for img in images|slice:":5" %}
+    <button class="gallery__item{% if forloop.first %} gallery__item--main{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% translate 'Open photo' %} {{ forloop.counter }}">
+      <img src="{% if forloop.first %}{{ img.image.url }}{% else %}{{ img.thumb_url }}{% endif %}" alt="{{ img.caption|default:property.title }}" {% if not forloop.first %}loading="lazy"{% else %}fetchpriority="high"{% endif %}>
+      {% if forloop.last and images|length > 5 %}<span class="gallery__more">+{{ images|length|add:"-5" }} {% translate "photos" %}</span>{% endif %}
+    </button>
+    {% endfor %}
+    {% if property.is_sold %}<span class="ribbon">{% translate "Sold" %}</span>{% endif %}
+  </div>
+  <script type="application/json" id="gallery-data">[{% for img in images %}{"src": "{{ img.image.url }}", "caption": "{{ img.caption|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}]</script>
+  {% endif %}
+</section>
+
+<section class="section section--tight">
+  <div class="container detail-layout">
+    <div class="detail-main">
+      <p class="eyebrow">{{ property.get_kind_display }} · {{ property.ref }}</p>
+      <h1 class="h-display detail-title">{{ property.title }}</h1>
+      <p class="detail-loc">{% icon "pin" 18 %} {{ property.location }}, {{ property.region }}</p>
+
+      <dl class="facts">
+        <div class="fact"><dt>{% translate "Land area" %}</dt><dd>{{ property.area_are|num:2 }} {% translate "are" %}<small>{{ property.land_area_m2|num }} m²{% if property.area_ha >= 1 %} · {{ property.area_ha|num:2 }} ha{% endif %}</small></dd></div>
+        <div class="fact"><dt>{% translate "Ownership" %}</dt><dd>{{ property.get_title_type_display }}{% if property.lease_years %}<small>{{ property.lease_years }} {% translate "years" %}</small>{% endif %}</dd></div>
+        <div class="fact"><dt>{% translate "Zoning" %}</dt><dd>{{ property.get_zoning_display }}</dd></div>
+        {% if property.distance_beach_km is not None %}<div class="fact"><dt>{% translate "To the beach" %}</dt><dd>{% if property.beachfront %}{% translate "Beachfront" %}{% else %}{{ property.distance_beach_km|num:1 }} km{% endif %}</dd></div>{% endif %}
+        {% if property.distance_airport_km is not None %}<div class="fact"><dt>{% translate "To the airport" %}</dt><dd>{{ property.distance_airport_km|num:1 }} km</dd></div>{% endif %}
+        {% if property.price_per_are %}<div class="fact"><dt>{% translate "Price per are" %}</dt><dd>{{ property.price_per_are|usd }}</dd></div>{% endif %}
+      </dl>
+
+      <ul class="tags">
+        {% if property.road_access %}<li>{% icon "road" 16 %} {% translate "Road access" %}</li>{% endif %}
+        {% if property.electricity %}<li>{% icon "bolt" 16 %} {% translate "Electricity" %}</li>{% endif %}
+        {% if property.water %}<li>{% icon "drop" 16 %} {% translate "Water" %}</li>{% endif %}
+        {% if property.ocean_view %}<li>{% icon "eye" 16 %} {% translate "Ocean view" %}</li>{% endif %}
+        {% if property.beachfront %}<li>{% icon "wave" 16 %} {% translate "Beachfront" %}</li>{% endif %}
+      </ul>
+
+      {% if property.highlight_list %}
+      <div class="block">
+        <h2 class="h-section">{% translate "Highlights" %}</h2>
+        <ul class="checklist checklist--cols">
+          {% for h in property.highlight_list %}<li>{% icon "check" 18 %} {{ h }}</li>{% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {% if property.description %}
+      <div class="block prose">
+        <h2 class="h-section">{% translate "About the property" %}</h2>
+        {{ property.description|richtext }}
+      </div>
+      {% endif %}
+
+      {% if videos %}
+      <div class="block">
+        <h2 class="h-section">{% translate "Video" %}</h2>
+        <div class="videos">
+          {% for v in videos %}
+            {% if v.embed_url %}<div class="video"><iframe src="{{ v.embed_url }}" title="{{ v.title|default:property.title }}" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+            {% elif v.file %}<div class="video"><video src="{{ v.file.url }}" controls preload="metadata" playsinline></video></div>{% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="block prose legal">
+        <h2 class="h-section">{% translate "Legal & ownership" %}</h2>
+        {% if property.legal_notes %}{{ property.legal_notes|richtext }}{% endif %}
+        <p class="muted">{% translate "We verify the certificate, zoning and seller documents before the deal, and structure ownership for foreign buyers: leasehold, PT PMA (HGB) or Hak Pakai. Notary and PPAT services are included in our support." %} <a href="{% url 'core:how_to_buy' %}">{% translate "How buying works" %} →</a></p>
+      </div>
+
+      {% if property.has_coords %}
+      <div class="block">
+        <h2 class="h-section">{% translate "Location" %}</h2>
+        <div class="map" id="map" data-lat="{{ property.latitude|stringformat:'s' }}" data-lng="{{ property.longitude|stringformat:'s' }}" data-label="{{ property.title }}"></div>
+        <p class="map-links"><a href="https://www.google.com/maps/search/?api=1&query={{ property.latitude|stringformat:'s' }},{{ property.longitude|stringformat:'s' }}" target="_blank" rel="noopener">{% translate "Open in Google Maps" %} ↗</a></p>
+      </div>
+      {% endif %}
+    </div>
+
+    <aside class="detail-aside">
+      <div class="panel sticky" id="inquiry">
+        <p class="price-label">{% if property.is_sold %}{% translate "Status" %}{% else %}{% translate "Price" %}{% endif %}</p>
+        <p class="price">{% if property.is_sold %}{% translate "Sold" %}{% elif property.show_price %}{{ property.price_usd|usd }}{% else %}{% translate "On request" %}{% endif %}</p>
+        {% if property.price_per_are and not property.is_sold %}<p class="price-sub">{{ property.price_per_are|usd }} / {% translate "are" %}</p>{% endif %}
+        <div class="aside-quick">
+          {% if site.whatsapp_url %}<a class="btn btn--outline btn--block" href="{{ site.whatsapp_url }}?text={{ property.ref|urlencode }}%20{{ property.title|urlencode }}" target="_blank" rel="noopener">{% icon "whatsapp" 18 %} WhatsApp</a>{% endif %}
+          {% if site.telegram_url %}<a class="btn btn--outline btn--block" href="{{ site.telegram_url }}" target="_blank" rel="noopener">{% icon "telegram" 18 %} Telegram</a>{% endif %}
+        </div>
+        <p class="aside-or">{% translate "or leave a request" %}</p>
+        {% include "partials/lead_form.html" with form_id="detail" %}
+      </div>
+    </aside>
+  </div>
+</section>
+
+{% if similar %}
+<section class="section section--tint">
+  <div class="container">
+    <h2 class="h-display">{% translate "Other properties" %}</h2>
+    <div class="grid-cards">
+      {% for p in similar %}{% include "partials/property_card.html" %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<div class="lightbox" data-lightbox hidden>
+  <button class="lightbox__close" type="button" data-lb-close aria-label="{% translate 'Close' %}">{% icon "close" 28 %}</button>
+  <button class="lightbox__nav lightbox__nav--prev" type="button" data-lb-prev aria-label="{% translate 'Previous' %}">{% icon "chevron-left" 32 %}</button>
+  <figure><img alt="" data-lb-img><figcaption data-lb-caption></figcaption></figure>
+  <button class="lightbox__nav lightbox__nav--next" type="button" data-lb-next aria-label="{% translate 'Next' %}">{% icon "chevron-right" 32 %}</button>
+  <span class="lightbox__count" data-lb-count></span>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if property.has_coords %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+(function () {
+  var el = document.getElementById("map");
+  if (!el || !window.L) return;
+  var pos = [parseFloat(el.dataset.lat), parseFloat(el.dataset.lng)];
+  var map = L.map(el, { scrollWheelZoom: false }).setView(pos, 14);
+  var sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+    maxZoom: 19, attribution: "Imagery © Esri"
+  });
+  var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19, attribution: "© OpenStreetMap"
+  });
+  sat.addTo(map);
+  L.control.layers({ "Satellite": sat, "Map": osm }).addTo(map);
+  L.circleMarker(pos, { radius: 9, color: "#fff", weight: 3, fillColor: "#2f6b5a", fillOpacity: 1 })
+    .addTo(map).bindTooltip(el.dataset.label);
+})();
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,4 @@
+{% extends "admin/change_form.html" %}
+{% block extrahead %}{{ block.super }}
+{% if autotranslate %}{{ autotranslate|json_script:"autotranslate-config" }}{% endif %}
+{% endblock %}

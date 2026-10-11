@@ -1,0 +1,31 @@
+{% extends "base.html" %}{% load i18n lovina %}
+{% block title %}{% translate "Services" %} — {{ site.brand }}{% endblock %}
+{% block description %}{% translate "Due diligence, PT PMA setup, notary and PPAT, permits and construction in Bali — full support for foreign land buyers." %}{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">{% translate "Services" %}</p>
+    <h1 class="h-display">{% translate "From the first visit to the keys" %}</h1>
+    <p class="lead">{% translate "Buying land in Indonesia as a foreigner is safe when every step is done right. We handle the paperwork, the people and the construction site." %}</p>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container services-list">
+    {% for s in services %}
+    <article class="service-row">
+      <span class="service-row__num">{{ forloop.counter|stringformat:"02d" }}</span>
+      <span class="service__icon">{% icon s.icon 30 %}</span>
+      <div>
+        <h2>{{ s.title }}</h2>
+        <p class="lead">{{ s.summary }}</p>
+        {% if s.body %}<div class="prose">{{ s.body|richtext }}</div>{% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+{% include "partials/cta_section.html" %}
+{% endblock %}

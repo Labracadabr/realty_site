@@ -1,0 +1,70 @@
+{% extends "base.html" %}{% load i18n lovina %}
+{% block title %}{% translate "Properties" %} — {{ site.brand }}{% endblock %}
+{% block description %}{% translate "Exclusive land plots, beachfront land and islands in Bali and Indonesia, directly from owners." %}{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">{% translate "Catalogue" %}</p>
+    <h1 class="h-display">{% translate "Land & islands" %}</h1>
+    <p class="lead">{% translate "Every property is personally inspected, with documents verified before it is listed." %}</p>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container">
+    <form class="filters" method="get">
+      <div class="field">
+        <label for="f-kind">{% translate "Type" %}</label>
+        <select id="f-kind" name="kind">
+          <option value="">{% translate "All types" %}</option>
+          {% for value, label in kinds %}<option value="{{ value }}"{% if filters.kind == value %} selected{% endif %}>{{ label }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-region">{% translate "Region" %}</label>
+        <select id="f-region" name="region">
+          <option value="">{% translate "All regions" %}</option>
+          {% for r in regions %}<option value="{{ r.slug }}"{% if filters.region == r.slug %} selected{% endif %}>{{ r.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-price">{% translate "Max price, USD" %}</label>
+        <input id="f-price" name="price_max" type="number" min="0" step="10000" inputmode="numeric" value="{{ filters.price_max }}" placeholder="{% translate 'Any' %}">
+      </div>
+      <div class="field">
+        <label for="f-area">{% translate "Min area, are" %}</label>
+        <input id="f-area" name="area_min" type="number" min="0" step="1" inputmode="numeric" value="{{ filters.area_min }}" placeholder="{% translate 'Any' %}">
+      </div>
+      <div class="field">
+        <label for="f-sort">{% translate "Sort" %}</label>
+        <select id="f-sort" name="sort">
+          <option value="new"{% if filters.sort == "new" %} selected{% endif %}>{% translate "Recommended" %}</option>
+          <option value="price_asc"{% if filters.sort == "price_asc" %} selected{% endif %}>{% translate "Price: low to high" %}</option>
+          <option value="price_desc"{% if filters.sort == "price_desc" %} selected{% endif %}>{% translate "Price: high to low" %}</option>
+          <option value="area_desc"{% if filters.sort == "area_desc" %} selected{% endif %}>{% translate "Largest first" %}</option>
+        </select>
+      </div>
+      <div class="filters__actions">
+        <button class="btn btn--primary" type="submit">{% icon "search" 18 %} {% translate "Show" %}</button>
+        {% if is_filtered %}<a class="btn btn--text" href="{% url 'listings:catalog' %}">{% translate "Reset" %}</a>{% endif %}
+      </div>
+    </form>
+
+    <p class="results-count">{% blocktranslate count n=properties|length %}{{ n }} property{% plural %}{{ n }} properties{% endblocktranslate %}</p>
+
+    {% if properties %}
+    <div class="grid-cards">
+      {% for p in properties %}{% include "partials/property_card.html" %}{% endfor %}
+    </div>
+    {% else %}
+    <div class="empty">
+      <p>{% translate "Nothing matches these filters yet. Many of our properties are offered privately — tell us what you need." %}</p>
+      <a class="btn btn--primary" href="#inquiry">{% translate "Request a private selection" %}</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% include "partials/cta_section.html" %}
+{% endblock %}
