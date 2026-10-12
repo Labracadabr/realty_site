@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 class SiteSettings(models.Model):
     """Singleton with contacts and editable home-page texts."""
 
-    brand = models.CharField(max_length=60, default="Lovinaland")
+    brand = models.CharField(max_length=60, default="Bali Islands")
     legal_name = models.CharField(_("company legal name"), max_length=120, blank=True, help_text="PT ...")
     nib = models.CharField("NIB", max_length=40, blank=True)
     kbli = models.CharField("KBLI", max_length=60, blank=True, help_text="e.g. 68200")

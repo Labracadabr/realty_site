@@ -57,7 +57,7 @@ class Property(models.Model):
         UNKNOWN = "unknown", _("To be confirmed")
 
     # --- identity & publishing
-    ref = models.CharField(_("reference"), max_length=20, unique=True, blank=True, help_text="Auto: LL-001")
+    ref = models.CharField(_("reference"), max_length=20, unique=True, blank=True, help_text="Auto: BI-001")
     title = models.CharField(_("title"), max_length=160)
     slug = models.SlugField(max_length=180, unique=True, blank=True, help_text="Auto from English title")
     status = models.CharField(_("status"), max_length=12, choices=Status.choices, default=Status.DRAFT)
@@ -143,9 +143,9 @@ class Property(models.Model):
             self.slug = slug
         if not self.ref:
             last = Property.objects.order_by("-id").first()
-            self.ref = f"LL-{(last.id + 1) if last else 1:03d}"
+            self.ref = f"BI-{(last.id + 1) if last else 1:03d}"
             while Property.objects.filter(ref=self.ref).exists():
-                self.ref = f"LL-{int(self.ref[3:]) + 1:03d}"
+                self.ref = f"BI-{int(self.ref[3:]) + 1:03d}"
         if self.status in (self.Status.PUBLISHED, self.Status.UNLISTED) and not self.published_at:
             self.published_at = timezone.now()
         super().save(*args, **kwargs)

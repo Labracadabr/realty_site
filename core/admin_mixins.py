@@ -7,7 +7,7 @@ class AutoTranslateMixin:
 
     class Media:
         js = ("admin/autotranslate.js",)
-        css = {"all": ("admin/lovina-admin.css",)}
+        css = {"all": ("admin/admin-extras.css",)}
 
     def render_change_form(self, request, context, *args, **kwargs):
         context["autotranslate"] = {

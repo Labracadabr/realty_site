@@ -7,8 +7,8 @@ from modeltranslation.admin import TranslationAdmin
 from .admin_mixins import AutoTranslateMixin
 from .models import Page, Service, SiteSettings, Testimonial
 
-admin.site.site_header = "Lovinaland"
-admin.site.site_title = "Lovinaland admin"
+admin.site.site_header = "Bali Islands"
+admin.site.site_title = "Bali Islands admin"
 admin.site.index_title = "Management"
 
 

@@ -69,29 +69,39 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("--reset", action="store_true", help="Delete existing properties first")
+        parser.add_argument(
+            "--content-only",
+            action="store_true",
+            help="Production-safe: only create missing pages, services, regions and home texts. "
+            "No demo objects, no test users, never overwrites existing content.",
+        )
 
-    def handle(self, *args, reset=False, **opts):
-        if not settings.DEBUG:
-            raise CommandError("seed_demo is for local development only (DEBUG=True).")
+    def handle(self, *args, reset=False, content_only=False, **opts):
+        if not settings.DEBUG and not content_only:
+            raise CommandError("Full demo seed is for local development only. On production use --content-only.")
 
         ensure_partner_group()
-        admin_user, partner = self._users()
+        if not content_only:
+            admin_user, partner = self._users()
+            if reset:
+                Property.objects.all().delete()
 
-        if reset:
-            Property.objects.all().delete()
-
+        fresh_site = not SiteSettings.objects.exists()
         site = SiteSettings.load()
-        for key in ("brand", "legal_name", "address", "email", "whatsapp", "telegram"):
-            setattr(site, key, D.SITE[key])
-        for key in ("hero_title", "hero_subtitle", "stats"):
-            tr(site, key, D.SITE[key])
-        site.save()
+        if not content_only:
+            for key in ("brand", "legal_name", "address", "email", "whatsapp", "telegram"):
+                setattr(site, key, D.SITE[key])
+        if fresh_site or not content_only:
+            for key in ("hero_title", "hero_subtitle", "stats"):
+                tr(site, key, D.SITE[key])
+            site.save()
 
         regions = {}
         for i, (slug, names) in enumerate(D.REGIONS):
-            region, _ = Region.objects.get_or_create(slug=slug, defaults={"order": i, "name": names["en"]})
-            tr(region, "name", names)
-            region.save()
+            region, created = Region.objects.get_or_create(slug=slug, defaults={"order": i, "name": names["en"]})
+            if created or not content_only:
+                tr(region, "name", names)
+                region.save()
             regions[slug] = region
 
         if not Service.objects.exists():
@@ -102,11 +112,17 @@ class Command(BaseCommand):
                 s.save()
 
         for slug, data in (("about", D.ABOUT), ("how-to-buy", D.HOW_TO_BUY), *D.LEGAL_PAGES.items()):
-            page, _ = Page.objects.get_or_create(slug=slug, defaults={"title": data["title"]["en"]})
+            page, created = Page.objects.get_or_create(slug=slug, defaults={"title": data["title"]["en"]})
+            if content_only and not created:
+                continue
             for field in ("title", "lead", "body"):
                 if field in data:
                     tr(page, field, data[field])
             page.save()
+
+        if content_only:
+            self.stdout.write(self.style.SUCCESS("Base content ready (pages, services, regions)."))
+            return
 
         for i, data in enumerate(D.PROPERTIES):
             if Property.objects.filter(title_en=data["title"]["en"]).exists():

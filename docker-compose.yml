@@ -1,33 +1,35 @@
-# Production on the VPS:   docker compose up -d --build
-# Only Postgres locally:   docker compose up -d db   (then DATABASE_URL=postgres://lovinaland:lovinaland@localhost:5432/lovinaland)
+# VPS:  docker compose up -d --build
+# Own Postgres container (not published to the host, so it never clashes with a system Postgres).
 services:
   db:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: lovinaland
-      POSTGRES_USER: lovinaland
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lovinaland}
+      POSTGRES_DB: baliislands
+      POSTGRES_USER: baliislands
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
     volumes:
       - pgdata:/var/lib/postgresql/data
-    ports:
-      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U baliislands -d baliislands"]
+      interval: 5s
+      retries: 10
 
   web:
     build: .
     restart: unless-stopped
     env_file: .env
     environment:
-      DATABASE_URL: postgres://lovinaland:${POSTGRES_PASSWORD:-lovinaland}@db:5432/lovinaland
+      DATABASE_URL: postgres://baliislands:${POSTGRES_PASSWORD}@db:5432/baliislands
       MEDIA_ROOT: /app/media
     volumes:
-      - media:/app/media
+      # Host folder so nginx can serve uploaded photos directly
+      - ${MEDIA_DIR:-/var/www/bali-islands/media}:/app/media
     ports:
-      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:${WEB_PORT:-8010}:8000"
     depends_on:
-      - db
-    profiles: ["prod"]
+      db:
+        condition: service_healthy
 
 volumes:
   pgdata:
-  media:

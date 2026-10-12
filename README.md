@@ -1,4 +1,4 @@
-# Lovinaland
+# Bali Islands — bali-islands.com
 
 Сайт агентства эксклюзивной земли и островов в Индонезии. Django 5.2 LTS, Postgres/SQLite, EN · RU · TR.
 
@@ -18,8 +18,7 @@ copy .env.example .env
 - Админка: http://localhost:8000/manage/ — тестовые аккаунты admin/partner в `.env` (`DEV_*`)
 - Тесты: `.venv\Scripts\python manage.py test listings`
 
-По умолчанию локально используется SQLite. Для Postgres укажите `DATABASE_URL` в `.env`
-(или поднимите `docker compose up -d db`).
+По умолчанию локально используется SQLite. Для Postgres укажите `DATABASE_URL` в `.env`.
 
 ## Роли
 
@@ -31,6 +30,13 @@ copy .env.example .env
 
 Новый партнёр: Админка → Пользователи → добавить → отметить «Статус персонала» и группу *Partners*.
 Чтобы партнёр получал заявки в Telegram, укажите его `Telegram chat ID`.
+
+## Двухфакторный вход в админку
+
+На проде (`DEBUG=False`) после пароля админка просит 6-значный код из приложения-аутентификатора
+(Google Authenticator, 1Password и т.п.). При первом входе показывается QR-код для привязки.
+Локально 2FA выключена, включается через `ADMIN_2FA=True` в `.env`.
+Потерян телефон: `python manage.py reset_2fa <username>`, после этого при следующем входе снова появится QR-код.
 
 ## Объекты
 
@@ -53,9 +59,20 @@ copy .env.example .env
 
 ## Деплой на VPS (Docker)
 
-1. Скопируйте проект на сервер и создайте `.env`: `DEBUG=False`, длинный `SECRET_KEY`, `ALLOWED_HOSTS=lovinaland.com,www.lovinaland.com`,
-   `CSRF_TRUSTED_ORIGINS=https://lovinaland.com,https://www.lovinaland.com`, `SITE_URL=https://lovinaland.com`, `POSTGRES_PASSWORD`,
-   `ADMIN_URL` (неочевидный путь), ключи Telegram/DeepL.
-2. `docker compose --profile prod up -d --build`
-3. `docker compose exec web python manage.py createsuperuser`
-4. nginx: `deploy/nginx.conf` + `certbot --nginx`.
+Сайт работает в двух контейнерах: Django (gunicorn) и собственный Postgres, который наружу не публикуется.
+nginx на хосте проксирует запросы на `127.0.0.1:8010` и сам раздаёт `/media/` из `/var/www/bali-islands/media`.
+
+```bash
+cp deploy/env.production.example .env      # заполнить
+sudo mkdir -p /var/www/bali-islands/media
+docker compose up -d --build
+docker compose exec web python manage.py seed_demo --content-only
+docker compose exec web python manage.py createsuperuser
+sudo cp deploy/nginx.conf /etc/nginx/sites-available/bali-islands
+sudo ln -s /etc/nginx/sites-available/bali-islands /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+sudo certbot --nginx -d bali-islands.com -d www.bali-islands.com
+```
+
+Обновление: `git pull && docker compose up -d --build`.
+Бэкап БД: `docker compose exec db pg_dump -U baliislands baliislands > backup.sql`.

@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n lovina %}
+{% extends "base.html" %}{% load i18n site_extras %}
 {% block title %}{{ page.seo_title|default:page.title }} — {{ site.brand }}{% endblock %}
 {% block description %}{{ page.seo_description|default:page.lead|truncatechars:165 }}{% endblock %}
 

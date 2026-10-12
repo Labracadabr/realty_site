@@ -13,6 +13,9 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 SITE_URL = env("SITE_URL", default="http://localhost:8000").rstrip("/")
 ADMIN_URL = env("ADMIN_URL", default="manage/")
+# Authenticator-app code required for the admin (on by default in production)
+ADMIN_2FA = env.bool("ADMIN_2FA", default=not DEBUG)
+OTP_TOTP_ISSUER = "Bali Islands"
 
 INSTALLED_APPS = [
     "modeltranslation",  # must precede django.contrib.admin
@@ -25,6 +28,8 @@ INSTALLED_APPS = [
     "django.contrib.sitemaps",
     "django.contrib.humanize",
     "adminsortable2",
+    "django_otp",
+    "django_otp.plugins.otp_totp",
     "accounts",
     "core",
     "listings",
@@ -38,6 +43,8 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django_otp.middleware.OTPMiddleware",
+    "accounts.two_factor.AdminTwoFactorMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.UTMMiddleware",

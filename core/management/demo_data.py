@@ -9,12 +9,12 @@ REGIONS = [
 ]
 
 SITE = {
-    "brand": "Lovinaland",
-    "legal_name": "PT Lovinaland (demo)",
+    "brand": "Bali Islands",
+    "legal_name": "PT Bali Islands (demo)",
     "address": "Lovina, Buleleng, Bali, Indonesia",
-    "email": "hello@lovinaland.example",
+    "email": "hello@bali-islands.com",
     "whatsapp": "6281200000000",
-    "telegram": "lovinaland",
+    "telegram": "baliislands",
     "hero_title": {
         "en": "Exclusive land in Bali, off-market",
         "ru": "Эксклюзивная земля на Бали вне открытого рынка",

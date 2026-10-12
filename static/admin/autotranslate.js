@@ -1,4 +1,4 @@
-/* Lovinaland admin: draft auto-translation toolbar + copy-link buttons. */
+/* Bali Islands admin: draft auto-translation toolbar + copy-link buttons. */
 (function () {
   "use strict";
 

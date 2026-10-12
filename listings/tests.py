@@ -45,7 +45,7 @@ class ListingTests(TestCase):
         )
 
     def test_ref_slug_and_numbers(self):
-        self.assertEqual(self.pub.ref, "LL-001")
+        self.assertEqual(self.pub.ref, "BI-001")
         self.assertEqual(self.pub.slug, "sea-view-plot")
         self.assertEqual(self.pub.area_are, Decimal("15.00"))
         self.assertEqual(self.pub.price_per_are, Decimal("20000"))
@@ -131,7 +131,7 @@ class ListingTests(TestCase):
         self.assertContains(self.client.get("/tr/properties/sea-view-plot/"), "Sea view plot")
 
 
-@override_settings(MEDIA_ROOT=MEDIA)
+@override_settings(MEDIA_ROOT=MEDIA, ADMIN_2FA=False)
 class AdminRoleTests(TestCase):
     def setUp(self):
         ensure_partner_group()

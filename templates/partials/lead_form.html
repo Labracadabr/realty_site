@@ -1,4 +1,4 @@
-{% load i18n lovina %}
+{% load i18n site_extras %}
 <form class="form" method="post" action="{% url 'listings:lead' %}">
   {% csrf_token %}
   <input type="hidden" name="next" value="{{ request.get_full_path }}">
