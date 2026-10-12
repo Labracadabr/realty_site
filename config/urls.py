@@ -5,7 +5,6 @@ from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 
-from accounts.two_factor import two_factor
 from core.admin_views import translate_fields
 from core.sitemaps import sitemaps
 from core.views import robots_txt
@@ -13,7 +12,6 @@ from listings.views import share_entry
 
 urlpatterns = [
     path(f"{settings.ADMIN_URL}translate/", translate_fields, name="admin_translate"),
-    path(f"{settings.ADMIN_URL}2fa/", two_factor, name="admin_2fa"),
     path(settings.ADMIN_URL, admin.site.urls),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
     path("robots.txt", robots_txt),

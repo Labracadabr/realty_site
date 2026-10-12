@@ -131,7 +131,7 @@ class ListingTests(TestCase):
         self.assertContains(self.client.get("/tr/properties/sea-view-plot/"), "Sea view plot")
 
 
-@override_settings(MEDIA_ROOT=MEDIA, ADMIN_2FA=False)
+@override_settings(MEDIA_ROOT=MEDIA)
 class AdminRoleTests(TestCase):
     def setUp(self):
         ensure_partner_group()

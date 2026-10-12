@@ -13,9 +13,6 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 SITE_URL = env("SITE_URL", default="http://localhost:8000").rstrip("/")
 ADMIN_URL = env("ADMIN_URL", default="manage/")
-# Authenticator-app code required for the admin (on by default in production)
-ADMIN_2FA = env.bool("ADMIN_2FA", default=not DEBUG)
-OTP_TOTP_ISSUER = "Bali Islands"
 
 INSTALLED_APPS = [
     "modeltranslation",  # must precede django.contrib.admin
@@ -28,8 +25,7 @@ INSTALLED_APPS = [
     "django.contrib.sitemaps",
     "django.contrib.humanize",
     "adminsortable2",
-    "django_otp",
-    "django_otp.plugins.otp_totp",
+    "axes",
     "accounts",
     "core",
     "listings",
@@ -43,11 +39,10 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django_otp.middleware.OTPMiddleware",
-    "accounts.two_factor.AdminTwoFactorMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.UTMMiddleware",
+    "axes.middleware.AxesMiddleware",  # keep last
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -74,6 +69,21 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {"default": env.db("DATABASE_URL", default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")}
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "accounts.User"
+AUTHENTICATION_BACKENDS = [
+    "axes.backends.AxesStandaloneBackend",  # login brute-force protection, must be first
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+# --- login lockout (django-axes) ---------------------------------------------------
+# 5 wrong passwords from one IP -> that IP can't log in for 1 hour. Locking by IP only,
+# so a stranger can't lock the real admin out by guessing at their username.
+AXES_FAILURE_LIMIT = env.int("AXES_FAILURE_LIMIT", default=5)
+AXES_COOLOFF_TIME = env.float("AXES_COOLOFF_HOURS", default=1)
+AXES_LOCKOUT_PARAMETERS = ["ip_address"]
+AXES_RESET_ON_SUCCESS = True
+AXES_CLIENT_IP_CALLABLE = "accounts.security.client_ip"
+AXES_LOCKOUT_TEMPLATE = "admin/lockout.html"
+AXES_VERBOSE = False
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
