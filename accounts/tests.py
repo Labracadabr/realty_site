@@ -48,3 +48,32 @@ class TwoFactorTests(TestCase):
         device = TOTPDevice.objects.create(user=self.user, name="phone", confirmed=True)
         r = self.client.post("/manage/2fa/", {"token": current_code(device), "next": "https://evil.example/"})
         self.assertEqual(r["Location"], "/manage/")
+
+
+@override_settings(ADMIN_2FA=False)
+class UserAdminTests(TestCase):
+    def test_superuser_and_partner_get_staff_flag(self):
+        from django.contrib.auth.models import Group
+
+        from accounts.models import PARTNERS_GROUP
+        from accounts.roles import ensure_partner_group
+
+        ensure_partner_group()
+        User = get_user_model()
+        boss = User.objects.create_superuser("boss", password="x" * 12)
+        self.client.force_login(boss)
+        group = Group.objects.get(name=PARTNERS_GROUP)
+        for name, extra in (("admin2", {"is_superuser": "on"}), ("partner2", {"groups": [group.pk]})):
+            self.client.post("/manage/accounts/user/add/", {
+                "username": name, "password1": "Strong-pass-123", "password2": "Strong-pass-123", "usable_password": "true",
+            })
+            user = User.objects.get(username=name)
+            data = {"username": name, "is_active": "on", "date_joined_0": "2026-01-01", "date_joined_1": "00:00:00", **extra}
+            r = self.client.post(f"/manage/accounts/user/{user.pk}/change/", data)
+            self.assertEqual(r.status_code, 302, r.content[:3000])
+            user.refresh_from_db()
+            self.assertTrue(user.is_staff, name)
+            self.client.logout()
+            self.assertTrue(self.client.login(username=name, password="Strong-pass-123"))
+            self.assertEqual(self.client.get("/manage/").status_code, 200)
+            self.client.force_login(boss)
