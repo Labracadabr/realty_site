@@ -68,6 +68,12 @@ class Property(models.Model):
     kind = models.CharField(_("type"), max_length=12, choices=Kind.choices, default=Kind.LAND)
     region = models.ForeignKey(Region, on_delete=models.PROTECT, related_name="properties", verbose_name=_("region"))
     location = models.CharField(_("location"), max_length=160, help_text="e.g. Kalibukbuk, Lovina")
+    map_link = models.CharField(
+        _("Google Maps link"),
+        max_length=1000,
+        blank=True,
+        help_text="Paste any Google Maps link to the spot (or coordinates). Latitude/longitude are filled on save.",
+    )
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
 
@@ -191,6 +197,12 @@ class Property(models.Model):
     @property
     def has_coords(self):
         return self.latitude is not None and self.longitude is not None
+
+    @property
+    def google_maps_url(self):
+        if self.map_link.startswith(("https://", "http://")):
+            return self.map_link
+        return f"https://www.google.com/maps/search/?api=1&query={self.latitude},{self.longitude}"
 
     def default_share_link(self):
         link = self.share_links.filter(owner__isnull=True, label="").first()

@@ -114,7 +114,7 @@
       <div class="block">
         <h2 class="h-section">{% translate "Location" %}</h2>
         <div class="map" id="map" data-lat="{{ property.latitude|stringformat:'s' }}" data-lng="{{ property.longitude|stringformat:'s' }}" data-label="{{ property.title }}"></div>
-        <p class="map-links"><a href="https://www.google.com/maps/search/?api=1&query={{ property.latitude|stringformat:'s' }},{{ property.longitude|stringformat:'s' }}" target="_blank" rel="noopener">{% translate "Open in Google Maps" %} ↗</a></p>
+        <p class="map-links"><a href="{{ property.google_maps_url }}" target="_blank" rel="noopener">{% translate "Open in Google Maps" %} ↗</a></p>
       </div>
       {% endif %}
     </div>

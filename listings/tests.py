@@ -172,7 +172,7 @@ class AdminRoleTests(TestCase):
         region = Region.objects.create(name="Tabanan", slug="tabanan")
         data = {
             "status": "draft", "order": 0, "title_en": "New plot", "kind": "land", "region": region.pk,
-            "location": "Kedungu", "land_area_m2": "1000", "title_type": "shm", "zoning": "unknown",
+            "location": "Kedungu", "land_area_m2": "1000", "map_link": "https://www.google.com/maps?q=-8.6112,115.0874", "title_type": "shm", "zoning": "unknown",
             "upload_photos": [jpeg("a.jpg", (800, 600)), jpeg("b.jpg", (800, 600))],
         }
         for prefix in ("images", "videos", "share_links"):
@@ -183,6 +183,7 @@ class AdminRoleTests(TestCase):
         self.assertEqual(prop.images.count(), 2)
         self.assertEqual(prop.images.filter(is_cover=True).count(), 1)
         self.assertEqual(prop.created_by, self.partner)
+        self.assertEqual((prop.latitude, prop.longitude), (Decimal("-8.611200"), Decimal("115.087400")))
         self.assertTrue(prop.share_links.exists())
 
 
@@ -192,3 +193,66 @@ class VideoUrlTests(TestCase):
         self.assertEqual(video_embed_url("https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=1"), "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0")
         self.assertEqual(video_embed_url("https://vimeo.com/123456"), "https://player.vimeo.com/video/123456")
         self.assertIsNone(video_embed_url("https://example.com/video"))
+
+
+class MapLinkTests(TestCase):
+    LOVINA = (Decimal("-8.172400"), Decimal("115.019800"))
+
+    def test_formats_without_network(self):
+        from .geo import coords_from_map_link
+
+        cases = [
+            # place link: exact pin (!3d!4d) wins over the viewport centre (@)
+            "https://www.google.com/maps/place/Lovina/@-8.1600,115.0000,15z/data=!3m1!4b1!4m6!3m5!1s0x0:0x0!8m2!3d-8.1724!4d115.0198",
+            "https://www.google.com/maps/@-8.1724,115.0198,17z",
+            "https://www.google.com/maps?q=-8.1724,115.0198",
+            "https://maps.google.com/?q=loc:-8.1724,115.0198",
+            "https://www.google.com/maps/search/?api=1&query=-8.1724%2C115.0198",
+            "https://www.google.co.id/maps/search/-8.1724,+115.0198?entry=ttu",
+            "https://www.google.com/maps/dir//-8.1724,115.0198",
+            "-8.1724, 115.0198",
+            "-8.1724,115.0198",
+            "8°10'20.6\"S 115°01'11.3\"E",
+        ]
+        for link in cases:
+            lat, lng = coords_from_map_link(link)
+            self.assertAlmostEqual(float(lat), -8.1724, places=3, msg=link)
+            self.assertAlmostEqual(float(lng), 115.0198, places=3, msg=link)
+
+    def test_short_link_followed_through_google_only(self):
+        from .geo import MapLinkError, coords_from_map_link
+
+        def fake_get(url, **kw):
+            resp = mock.Mock(is_redirect=True, status_code=302, text="")
+            if "maps.app.goo.gl" in url:
+                resp.headers = {"Location": "https://www.google.com/maps/place/X/data=!3d-8.1724!4d115.0198"}
+            else:
+                resp.headers = {"Location": "https://evil.example/"}
+            return resp
+
+        with mock.patch("listings.geo.requests.Session.get", side_effect=fake_get):
+            lat, lng = coords_from_map_link("https://maps.app.goo.gl/AbCdEf123")
+            self.assertAlmostEqual(float(lat), -8.1724, places=4)
+            with self.assertRaises(MapLinkError):
+                coords_from_map_link("https://evil.example/maps")
+
+    def test_page_pin_trusted_but_viewport_centre_ignored(self):
+        from .geo import MapLinkError, coords_from_map_link
+
+        page = mock.Mock(is_redirect=False, status_code=200, headers={}, text='...data=!3d-8.1724!4d115.0198...')
+        with mock.patch("listings.geo.requests.Session.get", return_value=page):
+            lat, _ = coords_from_map_link("https://www.google.com/maps/place/Some+Villa")
+        self.assertAlmostEqual(float(lat), -8.1724, places=4)
+
+        # Place-name-only page: just the IP-based default viewport -> must not be used
+        page.text = "...staticmap?center=-8.6966%2C115.2319&zoom=11..."
+        with mock.patch("listings.geo.requests.Session.get", return_value=page):
+            with self.assertRaises(MapLinkError):
+                coords_from_map_link("https://www.google.com/maps/place/Lovina+Beach")
+
+    def test_garbage_rejected(self):
+        from .geo import MapLinkError, coords_from_map_link
+
+        for bad in ("hello", "0,0", "-95.1, 115.2"):
+            with self.assertRaises(MapLinkError, msg=bad):
+                coords_from_map_link(bad)

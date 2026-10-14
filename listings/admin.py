@@ -8,6 +8,7 @@ from modeltranslation.admin import TranslationAdmin
 
 from core.admin_mixins import AutoTranslateMixin
 
+from .geo import MapLinkError, coords_from_map_link
 from .models import Lead, Property, PropertyImage, PropertyVideo, Region, ShareLink
 
 
@@ -45,6 +46,18 @@ class PropertyAdminForm(forms.ModelForm):
     class Meta:
         model = Property
         fields = "__all__"
+        widgets = {"map_link": forms.TextInput(attrs={"size": 80, "placeholder": "https://maps.app.goo.gl/…"})}
+
+    def clean(self):
+        data = super().clean()
+        link = (data.get("map_link") or "").strip()
+        coords_missing = data.get("latitude") is None or data.get("longitude") is None
+        if link and ("map_link" in self.changed_data or coords_missing):
+            try:
+                data["latitude"], data["longitude"] = coords_from_map_link(link)
+            except MapLinkError as exc:
+                self.add_error("map_link", str(exc))
+        return data
 
 
 def _thumb(image, size=90):
@@ -124,11 +137,11 @@ class PropertyAdmin(StaffUserChoicesMixin, SortableAdminBase, AutoTranslateMixin
     list_editable = ("status", "featured")
     list_filter = ("status", "kind", "region", "title_type", "featured", TranslationCheckFilter)
     search_fields = ("ref", "title_en", "title_ru", "title_tr", "location")
-    readonly_fields = ("ref", "created_by", "created_at", "updated_at", "published_at")
+    readonly_fields = ("ref", "created_by", "created_at", "updated_at", "published_at", "map_check")
     save_on_top = True
     fieldsets = (
         ("Publishing", {"fields": (("status", "featured", "order"), ("ref", "slug"), "responsible")}),
-        ("Object", {"fields": ("title", "summary", ("kind", "region"), "location", ("latitude", "longitude"))}),
+        ("Object", {"fields": ("title", "summary", ("kind", "region"), "location", "map_link", ("latitude", "longitude", "map_check"))}),
         (
             "Price & size",
             {"fields": (("land_area_m2", "price_usd", "price_on_request"),)},
@@ -157,6 +170,15 @@ class PropertyAdmin(StaffUserChoicesMixin, SortableAdminBase, AutoTranslateMixin
             .select_related("region")
             .prefetch_related("images", "share_links")
             .annotate(_leads=Count("leads", distinct=True))
+        )
+
+    @admin.display(description="Check")
+    def map_check(self, obj):
+        if not obj.has_coords:
+            return "—"
+        return format_html(
+            '<a href="https://www.google.com/maps/search/?api=1&query={},{}" target="_blank">📍 open pin ↗</a>',
+            obj.latitude, obj.longitude,
         )
 
     @admin.display(description="")
