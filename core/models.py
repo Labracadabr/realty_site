@@ -2,6 +2,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from .images import is_new_upload, optimize_upload
+
 
 class SiteSettings(models.Model):
     """Singleton with contacts and editable home-page texts."""
@@ -36,6 +38,8 @@ class SiteSettings(models.Model):
 
     def save(self, *args, **kwargs):
         self.pk = 1
+        if is_new_upload(self.hero_image):
+            self.hero_image = optimize_upload(self.hero_image, side=2400)
         super().save(*args, **kwargs)
 
     @classmethod
@@ -83,8 +87,13 @@ class Page(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        if is_new_upload(self.image):
+            self.image = optimize_upload(self.image, side=1600)
+        super().save(*args, **kwargs)
+
     def get_absolute_url(self):
-        named = {"about": "core:about", "how-to-buy": "core:how_to_buy"}
+        named ={"about": "core:about", "how-to-buy": "core:how_to_buy"}
         if self.slug in named:
             return reverse(named[self.slug])
         return reverse("core:page", kwargs={"slug": self.slug})

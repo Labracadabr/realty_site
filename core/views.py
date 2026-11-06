@@ -66,7 +66,6 @@ def contact(request):
 def robots_txt(request):
     lines = [
         "User-agent: *",
-        f"Disallow: /{settings.ADMIN_URL}",
         "Disallow: /s/",
         "Disallow: /*/s/",
         f"Sitemap: {settings.SITE_URL}/sitemap.xml",

@@ -33,6 +33,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "core.middleware.CanonicalHostMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -128,6 +129,8 @@ DATA_UPLOAD_MAX_NUMBER_FILES = 200
 DEEPL_API_KEY = env("DEEPL_API_KEY", default="")
 TELEGRAM_BOT_TOKEN = env("TELEGRAM_BOT_TOKEN", default="")
 TELEGRAM_CHAT_ID = env("TELEGRAM_CHAT_ID", default="")
+# Google Tag Manager container. Off in DEBUG so local visits don't end up in analytics.
+GTM_ID = env("GTM_ID", default="" if DEBUG else "GTM-5733PNVM")
 
 # --- security (production) ------------------------------------------------------
 if not DEBUG:

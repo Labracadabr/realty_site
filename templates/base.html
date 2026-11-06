@@ -1,6 +1,12 @@
 {% load static i18n site_extras %}{% get_current_language as LANG %}<!doctype html>
 <html lang="{{ LANG }}">
 <head>
+  {% block analytics %}{% if GTM_ID and not noindex %}<script async src="https://www.googletagmanager.com/gtm.js?id={{ GTM_ID }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  </script>{% endif %}{% endblock %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ site.brand }} — {% translate "Exclusive land in Bali" %}{% endblock %}</title>
@@ -13,7 +19,7 @@
   <meta property="og:type" content="{% block og_type %}website{% endblock %}">
   <meta property="og:title" content="{% block og_title %}{{ site.brand }}{% endblock %}">
   <meta property="og:description" content="{% block og_description %}{{ site.seo_description|default:site.hero_subtitle }}{% endblock %}">
-  {% block og_image %}{% if site.hero_image %}<meta property="og:image" content="{{ site.hero_image.url|absolute }}">{% endif %}{% endblock %}
+  {% block og_image %}{% static 'img/og-default.jpg' as og_default %}<meta property="og:image" content="{% if site.hero_image %}{{ site.hero_image.url|absolute }}{% else %}{{ og_default|absolute }}{% endif %}">{% endblock %}
   <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

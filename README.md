@@ -76,4 +76,6 @@ sudo certbot --nginx -d bali-islands.com -d www.bali-islands.com
 ```
 
 Обновление: `git pull && docker compose up -d --build`.
+Главный адрес сайта задаётся в `SITE_URL`: второй вариант (с `www` или без) автоматически перенаправляется на него.
+Сжать старые фото страниц и главного экрана: `docker compose exec web python manage.py optimize_images`.
 Бэкап БД: `docker compose exec db pg_dump -U baliislands baliislands > backup.sql`.

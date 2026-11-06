@@ -4,7 +4,7 @@
 {% block og_type %}article{% endblock %}
 {% block og_title %}{{ property.title }}{% endblock %}
 {% block og_description %}{{ property.summary|default:property.description|truncatechars:200 }}{% endblock %}
-{% block og_image %}{% if images %}<meta property="og:image" content="{{ images.0.image.url|absolute }}">{% endif %}{% endblock %}
+{% block og_image %}{% if images %}<meta property="og:image" content="{{ images.0.image.url|absolute }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
 
 {% block head %}
 {% if property.has_coords %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">{% endif %}
@@ -18,11 +18,11 @@
   "url": "{{ SITE_URL }}{{ request.path }}",
   {% if images %}"image": [{% for i in images|slice:":6" %}"{{ i.image.url|absolute }}"{% if not forloop.last %},{% endif %}{% endfor %}],{% endif %}
   "datePosted": "{{ property.published_at|date:'c' }}",
-  {% if property.show_price %}"offers": {"@type": "Offer", "price": "{{ property.price_usd }}", "priceCurrency": "USD"{% if property.is_sold %}, "availability": "https://schema.org/SoldOut"{% endif %}},{% endif %}
+  {% if property.show_price %}"offers": {"@type": "Offer", "price": "{{ property.price_usd|stringformat:'s' }}", "priceCurrency": "USD"{% if property.is_sold %}, "availability": "https://schema.org/SoldOut"{% endif %}},{% endif %}
   "about": {
     "@type": "Place",
     "name": "{{ property.location|escapejs }}, {{ property.region|escapejs }}",
-    {% if property.has_coords %}"geo": {"@type": "GeoCoordinates", "latitude": {{ property.latitude }}, "longitude": {{ property.longitude }}},{% endif %}
+    {% if property.has_coords %}"geo": {"@type": "GeoCoordinates", "latitude": {{ property.latitude|stringformat:'s' }}, "longitude": {{ property.longitude|stringformat:'s' }}},{% endif %}
     "address": {"@type": "PostalAddress", "addressLocality": "{{ property.location|escapejs }}", "addressRegion": "{{ property.region|escapejs }}", "addressCountry": "ID"}
   }
 }

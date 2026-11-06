@@ -9,6 +9,7 @@ def site(request):
     return {
         "site": SiteSettings.load(),
         "SITE_URL": settings.SITE_URL,
+        "GTM_ID": settings.GTM_ID,
         "language_links": [
             {"code": code, "name": name, "url": translate_url(path, code)} for code, name in settings.LANGUAGES
         ],

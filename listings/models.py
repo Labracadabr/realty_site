@@ -1,17 +1,17 @@
 import builtins
 import secrets
 from decimal import Decimal
-from io import BytesIO
 from pathlib import Path
 
 from django.conf import settings
-from django.core.files.base import ContentFile
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from PIL import Image, ImageOps
+
+from core.images import encode_webp
 
 
 class Region(models.Model):
@@ -237,17 +237,9 @@ class PropertyImage(models.Model):
         newly_uploaded = self.image and not getattr(self.image, "_committed", True)
         if newly_uploaded or (self.image and not self.thumb):
             img = ImageOps.exif_transpose(Image.open(self.image)).convert("RGB")
-            self.image = self._encode(img, self.MAX_SIDE, quality=84)
-            self.thumb = self._encode(img, self.THUMB_SIDE, quality=78)
+            self.image = encode_webp(img, self.MAX_SIDE, quality=84)
+            self.thumb = encode_webp(img, self.THUMB_SIDE, quality=78)
         super().save(*args, **kwargs)
-
-    @staticmethod
-    def _encode(img, side, quality):
-        copy = img.copy()
-        copy.thumbnail((side, side), Image.LANCZOS)
-        buf = BytesIO()
-        copy.save(buf, "WEBP", quality=quality, method=5)
-        return ContentFile(buf.getvalue(), name=f"{secrets.token_hex(8)}.webp")
 
     @builtins.property
     def thumb_url(self):
